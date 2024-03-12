@@ -6,7 +6,6 @@ let level = 1;
 let canvasBackgroundColor = [100, 100, 100, 255];
 let changeBackground = false;
 let showPlayers = [true, true];
-let counter = 0;
 let enemys = [];
 let enemyNumber = 4;
 let enemyBullets = [];
