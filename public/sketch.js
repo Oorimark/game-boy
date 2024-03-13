@@ -1,38 +1,36 @@
-function setup() {
-  playerKeys = {
-    arrowKeys: {
-      LEFT: LEFT_ARROW,
-      RIGHT: RIGHT_ARROW,
-      UP: UP_ARROW,
-      DOWN: DOWN_ARROW,
-      SHOOT: SPACE_BAR,
-    },
+function preload() {
+  playerCharacterImg = loadImage("./assets/characters/player.png");
+  enemyCharacterImg = loadImage("./assets//characters/enemy.png");
+}
 
-    numPadKeys: {
-      LEFT: 100,
-      RIGHT: 102,
-      UP: 104,
-      DOWN: 98,
-      SHOOT: 101,
-    },
+function setup() {
+  const arrowKeys = {
+    LEFT: LEFT_ARROW,
+    RIGHT: RIGHT_ARROW,
+    UP: UP_ARROW,
+    DOWN: DOWN_ARROW,
+    SHOOT: SPACE_BAR,
   };
+
+  playerKeys.arrowKeys = arrowKeys; // register arrow keys to player keys
 
   createCanvas(windowWidth, windowHeight);
   createUICanvas = createGraphics(windowWidth, windowHeight);
 
-  // args => (width, height, playerKey, playerNumber)
+  // (width, height, playerKey, playerNumber)
   player1 = new Player(width / 2, height, "arrowKeys", 1);
   createEnemyHandler();
 }
 
 function draw() {
-  const [r, g, b, a] = canvasBackgroundColor;
-  background(r, g, b, a);
+  const [r, g, b] = canvasBackgroundColor;
+  background(r, g, b);
 
   image(createUICanvas, 0, 0);
-  createUICanvas.background(r, g, b, a);
+  createUICanvas.background(r, g, b);
 
-  canvasBackgroundColor = [100, 100, 100, 255];
+  // canvasBackgroundColor = [100, 100, 100, 255];
+  canvasBackgroundColor = [38, 68, 57];
 
   // display score
   displayUI();

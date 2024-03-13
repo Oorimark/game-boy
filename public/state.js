@@ -1,19 +1,15 @@
 class Box {
-  constructor(x, y, speed, color) {
+  constructor(x, y, speed, characterImg) {
     this.x = x;
     this.y = y - bottomPadding;
     this.speed = speed;
     this.size = 35;
     this.color = color;
+    this.characterImg = characterImg;
   }
 
   display() {
-    const [r, g, b] = this.color || [255, 255, 255];
-
-    noFill();
-    stroke(r, g, b);
-    strokeWeight(5);
-    rect(this.x, this.y, this.size);
+    image(this.characterImg, this.x, this.y);
   }
 
   checkBoundaryX() {
@@ -45,7 +41,7 @@ class Box {
 
 class Bullet {
   constructor(x, y, speed = 10, playerType) {
-    this.x = x - 5;
+    this.x = x;
     this.y = y;
     this.speed = speed;
     this.size = 5;
@@ -82,7 +78,7 @@ class Player extends Box {
   healthDecayRate = 3;
 
   constructor(x, y, selectedKey, playerNumber) {
-    super(x, y, Player.speed);
+    super(x, y, Player.speed, playerCharacterImg);
     this.bulletSpped = 20;
     this.playerKey = playerKeys[selectedKey];
     this.playerNumber = playerNumber;
@@ -113,9 +109,8 @@ class Player extends Box {
     enemyBullets.forEach((bullet) => {
       let d = dist(bullet.x, bullet.y, this.x, this.y);
       if (d <= this.size / 2) {
-        canvasBackgroundColor = [255, 0, 0, 20];
+        canvasBackgroundColor = [43, 137, 103];
         this.health -= this.healthDecayRate;
-        print("hit");
         if (this.health <= 0) this.remove();
       }
     });
@@ -124,20 +119,24 @@ class Player extends Box {
   remove() {
     showPlayers[this.playerNumber - 1] = false;
   }
+
+  displayHealth() {
+    if (this.health < 0) return "0%";
+    return int((this.health / 100) * 100) + "%";
+  }
 }
 
 class Enemy extends Box {
   speed = 20;
   health = 100;
-  healthDecayRate = 10;
-  color = [255, 0, 0];
+  healthDecayRate = 20;
   playerType = "Enemy";
 
   x = random(width);
   y = random(height * 0.2, height * 0.4);
 
   constructor(_id) {
-    super(Enemy.x, Enemy.y, Enemy.speed, Enemy.color);
+    super(Enemy.x, Enemy.y, Enemy.speed, enemyCharacterImg);
     this._id = _id;
     this.bulletSpeed = 20;
     this.moveByStepFlag = true;
@@ -187,7 +186,7 @@ class Enemy extends Box {
     playerBullets.forEach((bullet) => {
       let d = dist(bullet.x, bullet.y, this.x, this.y);
       if (d <= this.size / 2) {
-        canvasBackgroundColor = [0, 255, 0, 20];
+        canvasBackgroundColor = [130, 29, 29];
         this.health -= this.healthDecayRate;
         if (this.health <= 0) this.remove();
       }

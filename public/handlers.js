@@ -55,7 +55,7 @@ function respawnEnemyHandler() {
   if (!enemys.length) {
     level++;
     enemyNumber += 2; // multiply enemy by 2
-    player1.health += 20; // Add 20 to player health
+    player1.health += 25; // Add 40 to player health
     createEnemyHandler(); // create more enemys
   }
 }
@@ -63,5 +63,9 @@ function respawnEnemyHandler() {
 function displayUI() {
   createUICanvas.fill(255);
   createUICanvas.text("LEVEL: " + level, 50, 50);
-  createUICanvas.text("PLAYER HEALTH: " + player1.health, width - 150, 50);
+  createUICanvas.text(
+    "PLAYER HEALTH: " + player1.displayHealth(),
+    width - 150,
+    50,
+  );
 }
