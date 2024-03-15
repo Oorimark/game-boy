@@ -3,7 +3,7 @@ class Box {
     this.x = x;
     this.y = y - bottomPadding;
     this.speed = speed;
-    this.size = 35;
+    this.size = 39;
     this.color = color;
     this.characterImg = characterImg;
   }
@@ -75,7 +75,7 @@ class Bullet {
 class Player extends Box {
   speed = 20;
   health = 100;
-  healthDecayRate = 3;
+  healthDecayRate = 1;
 
   constructor(x, y, selectedKey, playerNumber) {
     super(x, y, Player.speed, playerCharacterImg);
@@ -106,12 +106,27 @@ class Player extends Box {
   }
 
   checkIncomingBullet() {
-    enemyBullets.forEach((bullet) => {
+    enemyBullets.forEach((bullet, idx) => {
       let d = dist(bullet.x, bullet.y, this.x, this.y);
       if (d <= this.size / 2) {
-        canvasBackgroundColor = [43, 137, 103];
+        canvasBackgroundColor = [130, 29, 29];
         this.health -= this.healthDecayRate;
-        if (this.health <= 0) this.remove();
+        if (this.health <= 0) {
+          this.remove();
+          enemyBullets.splice(idx, 1);
+          parseInt(highestLevel) < level &&
+            localStorage.setItem("highestLevel", level);
+        }
+      }
+    });
+  }
+
+  checkIncomingGifts() {
+    giftItems.forEach((gift, idx) => {
+      let d = dist(this.x, this.y, gift.x, gift.y);
+      if (d <= this.size) {
+        this.health += gift.value;
+        giftItems.splice(idx, 1);
       }
     });
   }
@@ -129,7 +144,7 @@ class Player extends Box {
 class Enemy extends Box {
   speed = 20;
   health = 100;
-  healthDecayRate = 20;
+  healthDecayRate = 10;
   playerType = "Enemy";
 
   x = random(width);
@@ -183,17 +198,53 @@ class Enemy extends Box {
   }
 
   checkIncomingBullet() {
-    playerBullets.forEach((bullet) => {
+    playerBullets.forEach((bullet, idx) => {
       let d = dist(bullet.x, bullet.y, this.x, this.y);
       if (d <= this.size / 2) {
-        canvasBackgroundColor = [130, 29, 29];
         this.health -= this.healthDecayRate;
-        if (this.health <= 0) this.remove();
+        canvasBackgroundColor = [43, 137, 103];
+        if (this.health <= 0) {
+          playerBullets.splice(idx, 1);
+          this.remove();
+        }
       }
     });
   }
 
   remove() {
     enemys = enemys.filter((enemy) => enemy._id !== this._id);
+  }
+}
+
+class GiftItems {
+  constructor(itemType, value) {
+    this.x = random(width);
+    this.y = 20;
+    this.itemType = itemType;
+    this.value = value;
+    this.speed = 2;
+  }
+
+  move() {
+    this.y += this.speed;
+  }
+
+  display(itemType) {
+    let img;
+
+    switch (itemType) {
+      case "health":
+        img = "";
+        break;
+    }
+
+    text(`${this.itemType}: ${this.value}%`, this.x, this.y);
+  }
+}
+
+class HealthGift extends GiftItems {
+  value = random([20, 50, 70, 100]);
+  constructor() {
+    super("health", HealthGift.value);
   }
 }

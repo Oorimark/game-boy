@@ -4,6 +4,7 @@ function playerActionHandler() {
     player1.move();
     player1.shoot();
     player1.checkIncomingBullet();
+    player1.checkIncomingGifts();
   }
 
   // if (showPlayers[1]) {
@@ -62,10 +63,40 @@ function respawnEnemyHandler() {
 
 function displayUI() {
   createUICanvas.fill(255);
-  createUICanvas.text("LEVEL: " + level, 50, 50);
+  createUICanvas.text("HIGHEST LEVEL: " + highestLevel, 50, 50);
+  createUICanvas.text("LEVEL: " + level, 50, 70);
   createUICanvas.text(
     "PLAYER HEALTH: " + player1.displayHealth(),
     width - 150,
     50,
   );
+}
+
+function createGiftItems() {
+  giftItems.push(new HealthGift());
+}
+
+function createGiftItemsDelay() {
+  if (level > 2) {
+    if (toggleCreateGiftItems) {
+      toggleCreateGiftItems = false;
+      createHealthGiftItemHanlder();
+    }
+  }
+}
+
+function createHealthGiftItemHanlder() {
+  interval = random([20, 30, 45]);
+
+  setTimeout(() => {
+    createGiftItems();
+    toggleCreateGiftItems = true;
+  }, interval * 1000);
+}
+
+function displayGifts() {
+  giftItems.forEach((item) => {
+    item.display();
+    item.move();
+  });
 }
