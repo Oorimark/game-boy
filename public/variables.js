@@ -2,7 +2,10 @@ const SPACE_BAR = 32;
 
 let player1;
 let player2;
+let width_;
+let height_;
 let createUICanvas;
+let createTempCanvas;
 let playerCharacterImg;
 let enemyCharacterImg;
 

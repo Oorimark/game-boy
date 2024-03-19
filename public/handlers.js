@@ -100,3 +100,14 @@ function displayGifts() {
     item.move();
   });
 }
+
+function displayGiftScore(score) {
+  let p = createP("+" + score + "%");
+
+  p.position(width_ / 2, height_ / 2);
+  p.style("color", "white", "font-size", 540);
+
+  setTimeout(() => {
+    p.remove();
+  }, 3000);
+}

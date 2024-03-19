@@ -75,13 +75,14 @@ class Bullet {
 class Player extends Box {
   speed = 20;
   health = 100;
-  healthDecayRate = 1;
+  healthDecayRate = 3;
 
   constructor(x, y, selectedKey, playerNumber) {
     super(x, y, Player.speed, playerCharacterImg);
     this.bulletSpped = 20;
     this.playerKey = playerKeys[selectedKey];
     this.playerNumber = playerNumber;
+    this.receivedHealthGift = 0;
   }
 
   move() {
@@ -126,6 +127,8 @@ class Player extends Box {
       let d = dist(this.x, this.y, gift.x, gift.y);
       if (d <= this.size) {
         this.health += gift.value;
+        this.receivedHealthGift = gift.value;
+        displayGiftScore(gift.value);
         giftItems.splice(idx, 1);
       }
     });
@@ -217,12 +220,12 @@ class Enemy extends Box {
 }
 
 class GiftItems {
-  constructor(itemType, value) {
+  constructor(itemType, value, speed) {
     this.x = random(width);
     this.y = 20;
     this.itemType = itemType;
     this.value = value;
-    this.speed = 2;
+    this.speed = speed;
   }
 
   move() {
@@ -244,7 +247,8 @@ class GiftItems {
 
 class HealthGift extends GiftItems {
   value = random([20, 50, 70, 100]);
+  speed = random([2, 5, 7, 10]);
   constructor() {
-    super("health", HealthGift.value);
+    super("health", HealthGift.value, HealthGift.spped);
   }
 }
