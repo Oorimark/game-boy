@@ -6,8 +6,10 @@ let width_;
 let height_;
 let createUICanvas;
 let createTempCanvas;
-let playerCharacterImg;
+
+let healthGiftImg;
 let enemyCharacterImg;
+let playerCharacterImg;
 
 let toggleCreateGiftItems = true;
 

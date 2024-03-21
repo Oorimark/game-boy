@@ -77,11 +77,9 @@ function createGiftItems() {
 }
 
 function createGiftItemsDelay() {
-  if (level > 2) {
-    if (toggleCreateGiftItems) {
-      toggleCreateGiftItems = false;
-      createHealthGiftItemHanlder();
-    }
+  if (level > 2 && toggleCreateGiftItems) {
+    toggleCreateGiftItems = false;
+    createHealthGiftItemHanlder();
   }
 }
 

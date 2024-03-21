@@ -220,35 +220,32 @@ class Enemy extends Box {
 }
 
 class GiftItems {
-  constructor(itemType, value, speed) {
-    this.x = random(width);
+  constructor(itemType, value, speed, giftImg) {
+    this.x = random(width_);
     this.y = 20;
     this.itemType = itemType;
     this.value = value;
     this.speed = speed;
+    this.giftImg = giftImg;
+    this.width = 74.14; // original width
+    this.height = 71.17; // original height
   }
 
   move() {
     this.y += this.speed;
   }
 
-  display(itemType) {
-    let img;
-
-    switch (itemType) {
-      case "health":
-        img = "";
-        break;
-    }
-
-    text(`${this.itemType}: ${this.value}%`, this.x, this.y);
+  display() {
+    image(this.giftImg, this.x, this.y);
+    text(`+${this.value}%`, this.x + this.width / 2, this.y + this.height);
   }
 }
 
 class HealthGift extends GiftItems {
   value = random([20, 50, 70, 100]);
-  speed = random([2, 5, 7, 10]);
+  speed = random([2, 3, 4, 7]);
   constructor() {
-    super("health", HealthGift.value, HealthGift.spped);
+    super("health", HealthGift.value, HealthGift.spped, healthGiftImg);
   }
+  t;
 }

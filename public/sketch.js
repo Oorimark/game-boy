@@ -1,6 +1,7 @@
 function preload() {
   playerCharacterImg = loadImage("./assets/characters/player.png");
-  enemyCharacterImg = loadImage("./assets//characters/enemy.png");
+  enemyCharacterImg = loadImage("./assets/characters/enemy.png");
+  healthGiftImg = loadImage("./assets/characters/health_gift.png");
 }
 
 function setup() {
@@ -18,6 +19,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   createUICanvas = createGraphics(windowWidth, windowHeight);
   createTempCanvas = createGraphics(windowWidth, windowHeight);
+
   playerKeys.arrowKeys = arrowKeys; // register arrow keys to player keys
   player1 = new Player(width / 2, height, "arrowKeys", 1);
   createEnemyHandler();
