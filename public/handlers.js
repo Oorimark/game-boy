@@ -1,10 +1,12 @@
 function playerActionHandler() {
   if (showPlayers[0]) {
     player1.display();
-    player1.move();
     player1.shoot();
+    player1.move();
     player1.checkIncomingBullet();
     player1.checkIncomingGifts();
+  } else {
+    playerLoseAudio.play();
   }
 
   // if (showPlayers[1]) {

@@ -26,13 +26,13 @@ class Box {
     return { reachedBottom, reachedTop };
   }
 
-  bullet(x, y, speed, playerType, keyType) {
+  shooting(x, y, speed, playerType, shootKeyType) {
     if (playerType === "Enemy") {
       enemyBullets.push(
         new Bullet(x + this.size / 2, y + this.size, speed, playerType),
       );
     } else {
-      if (keyIsDown(keyType)) {
+      if (keyIsDown(shootKeyType)) {
         playerBullets.push(new Bullet(x + this.size / 2, y - this.size, speed));
       }
     }
@@ -88,6 +88,17 @@ class Player extends Box {
   move() {
     const { LEFT, RIGHT, UP, DOWN } = this.playerKey;
 
+    // if (
+    //   keyIsDown(LEFT) ||
+    //   keyIsDown(RIGHT) ||
+    //   keyIsDown(UP) ||
+    //   keyIsDown(DOWN)
+    // ) {
+    //   playerMoveAudio.play();
+    // } else {
+    //   playerMoveAudio.stop();
+    // }
+
     if (keyIsDown(LEFT)) {
       if (!this.checkBoundaryX().reachedLeft) this.x += this.speed * -1;
     } else if (keyIsDown(RIGHT)) {
@@ -103,7 +114,7 @@ class Player extends Box {
   }
 
   shoot() {
-    this.bullet(this.x, this.y, this.bulletSpped, null, this.playerKey.SHOOT);
+    this.shooting(this.x, this.y, this.bulletSpped, null, this.playerKey.SHOOT);
   }
 
   checkIncomingBullet() {
@@ -126,6 +137,7 @@ class Player extends Box {
     giftItems.forEach((gift, idx) => {
       let d = dist(this.x, this.y, gift.x, gift.y);
       if (d <= this.size) {
+        bonusEarnAudio.play();
         this.health += gift.value;
         this.receivedHealthGift = gift.value;
         displayGiftScore(gift.value);
@@ -197,7 +209,7 @@ class Enemy extends Box {
   }
 
   shoot() {
-    this.bullet(this.x, this.y, this.bulletSpeed, this.playerType);
+    this.shooting(this.x, this.y, this.bulletSpeed, this.playerType);
   }
 
   checkIncomingBullet() {
@@ -207,8 +219,11 @@ class Enemy extends Box {
         this.health -= this.healthDecayRate;
         canvasBackgroundColor = [43, 137, 103];
         if (this.health <= 0) {
+          killEnemyAudio.play();
           playerBullets.splice(idx, 1);
           this.remove();
+        } else {
+          killEnemyAudio.stop();
         }
       }
     });
@@ -227,8 +242,8 @@ class GiftItems {
     this.value = value;
     this.speed = speed;
     this.giftImg = giftImg;
-    this.width = 74.14; // original width
-    this.height = 71.17; // original height
+    this.width = 74.14 - 20; // 20 - padding, 74.14 - original width
+    this.height = 20 + 71.17; // 20 - padding, 71.17 - original height
   }
 
   move() {
@@ -243,7 +258,7 @@ class GiftItems {
 
 class HealthGift extends GiftItems {
   value = random([20, 50, 70, 100]);
-  speed = random([2, 3, 4, 7]);
+  speed = 3;
   constructor() {
     super("health", HealthGift.value, HealthGift.spped, healthGiftImg);
   }

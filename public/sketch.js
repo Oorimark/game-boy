@@ -1,7 +1,25 @@
 function preload() {
-  playerCharacterImg = loadImage("./assets/characters/player.png");
+  // load images
   enemyCharacterImg = loadImage("./assets/characters/enemy.png");
+  playerCharacterImg = loadImage("./assets/characters/player.png");
   healthGiftImg = loadImage("./assets/characters/health_gift.png");
+
+  // load audio
+  // gameBackgroundAudio = createAudio(
+  //   "./assets/sounds/mixkit-game-level-music-689.wav",
+  // );
+  bulletShootAudio = createAudio(
+    "./assets/sounds/mixkit-game-ball-tap-2073.wav",
+  );
+  bonusEarnAudio = createAudio(
+    "./assets/sounds/mixkit-bonus-earned-in-video-game-2058.wav",
+  );
+  killEnemyAudio = createAudio(
+    "./assets/sounds/mixkit-game-blood-pop-slide-2363.wav",
+  );
+  playerLoseAudio = createAudio(
+    "./assets/sounds/mixkit-player-losing-or-failing-2042.wav",
+  );
 }
 
 function setup() {
@@ -17,20 +35,24 @@ function setup() {
   };
 
   createCanvas(windowWidth, windowHeight);
+
   createUICanvas = createGraphics(windowWidth, windowHeight);
   createTempCanvas = createGraphics(windowWidth, windowHeight);
 
   playerKeys.arrowKeys = arrowKeys; // register arrow keys to player keys
   player1 = new Player(width / 2, height, "arrowKeys", 1);
   createEnemyHandler();
+
+  // gameBackgroundAudio.loop();
 }
 
 function draw() {
   const [r, g, b] = canvasBackgroundColor;
 
   background(r, g, b);
-  image(createUICanvas, 0, 0);
   canvasBackgroundColor = [38, 68, 57];
+
+  image(createUICanvas, 0, 0);
   createUICanvas.background(r, g, b);
 
   displayUI();
