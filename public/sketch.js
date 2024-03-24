@@ -5,9 +5,6 @@ function preload() {
   healthGiftImg = loadImage("./assets/characters/health_gift.png");
 
   // load audio
-  // gameBackgroundAudio = createAudio(
-  //   "./assets/sounds/mixkit-game-level-music-689.wav",
-  // );
   bulletShootAudio = createAudio(
     "./assets/sounds/mixkit-game-ball-tap-2073.wav",
   );
@@ -42,8 +39,6 @@ function setup() {
   playerKeys.arrowKeys = arrowKeys; // register arrow keys to player keys
   player1 = new Player(width / 2, height, "arrowKeys", 1);
   createEnemyHandler();
-
-  // gameBackgroundAudio.loop();
 }
 
 function draw() {
