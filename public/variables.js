@@ -8,8 +8,16 @@ let createTempCanvas;
 let gameBackgroundAudio;
 
 let healthGiftImg;
-let enemyCharacterImg;
-let playerCharacterImg;
+
+let enemyCharacterUp;
+let enemyCharacterDown;
+let enemyCharacterRight;
+let enemyCharacterLeft;
+
+let playerCharacterUp;
+let playerCharacterDown;
+let playerCharacterRight;
+let playerCharacterLeft;
 
 let bulletShootAudio;
 let playerMoveAudio;

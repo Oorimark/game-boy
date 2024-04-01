@@ -1,13 +1,19 @@
 function preload() {
   // load images
-  enemyCharacterImg = loadImage("./assets/characters/enemy.png");
-  playerCharacterImg = loadImage("./assets/characters/player.png");
+  enemyCharacterUp = loadImage("./assets/characters/enemy_up.png");
+  enemyCharacterDown = loadImage("./assets/characters/enemy_down.png");
+  enemyCharacterRight = loadImage("./assets/characters/enemy_right.png");
+  enemyCharacterLeft = loadImage("./assets/characters/enemy_left.png");
+
+  playerCharacterUp = loadImage("./assets/characters/player_up.png");
+  playerCharacterDown = loadImage("./assets/characters/player_down.png");
+  playerCharacterRight = loadImage("./assets/characters/player_right.png");
+  playerCharacterLeft = loadImage("./assets/characters/player_left.png");
+
   healthGiftImg = loadImage("./assets/characters/health_gift.png");
 
   // load audio
-  bulletShootAudio = createAudio(
-    "./assets/sounds/mixkit-game-ball-tap-2073.wav",
-  );
+  bulletShootAudio = createAudio("./assets/sounds/blaster-2-81267.mp3");
   bonusEarnAudio = createAudio(
     "./assets/sounds/mixkit-bonus-earned-in-video-game-2058.wav",
   );

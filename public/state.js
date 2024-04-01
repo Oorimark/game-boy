@@ -13,34 +13,44 @@ class Box {
   }
 
   checkBoundaryX() {
-    let reachedRight = width - this.x - this.size > 0 ? false : true;
-    let reachedLeft =
-      width - this.x - this.size <= width - this.size ? false : true;
+    let reachedRight = !(width - this.x - this.size > 0);
+    let reachedLeft = !(width - this.x - this.size <= width - this.size);
     return { reachedRight, reachedLeft };
   }
 
   checkBoundaryY() {
-    let reachedBottom = height - this.y - this.size > 0 ? false : true;
-    let reachedTop =
-      height - this.y - this.size <= height - this.size ? false : true;
+    let reachedBottom = !(height - this.y - this.size > 0);
+    let reachedTop = !(height - this.y - this.size <= height - this.size);
+
     return { reachedBottom, reachedTop };
   }
 
-  shooting(x, y, speed, playerType, shootKeyType) {
+  shooting(x, y, speed, playerType, shootKeyType, playerDirection) {
     if (playerType === "Enemy") {
       enemyBullets.push(
-        new Bullet(x + this.size / 2, y + this.size, speed, playerType),
+        new Bullet(
+          x + this.size / 2,
+          y + this.size,
+          speed,
+          playerDirection,
+          playerType,
+        ),
       );
     } else {
       if (keyIsDown(shootKeyType)) {
-        playerBullets.push(new Bullet(x + this.size / 2, y - this.size, speed));
+        bulletShootAudio.play();
+        playerBullets.push(
+          new Bullet(x + this.size / 2, y - this.size, speed, playerDirection),
+        );
+      } else {
+        bulletShootAudio.stop();
       }
     }
   }
 }
 
 class Bullet {
-  constructor(x, y, speed = 10, playerType) {
+  constructor(x, y, speed = 10, playerDirection, playerType) {
     this.x = x;
     this.y = y;
     this.speed = speed;
@@ -48,6 +58,7 @@ class Bullet {
     this.playerType = playerType;
     this.bulletStepFlag = false;
     this.bulletStepInterval = 500;
+    this.playerDirection = playerDirection;
   }
 
   display() {
@@ -64,10 +75,19 @@ class Bullet {
   }
 
   move() {
-    if (this.playerType === "Enemy") {
-      this.y += this.speed;
-    } else {
-      this.y -= this.speed;
+    switch (this.playerDirection) {
+      case "LEFT":
+        this.x -= this.speed;
+        break;
+      case "RIGHT":
+        this.x += this.speed;
+        break;
+      case "UP":
+        this.y -= this.speed;
+        break;
+      case "DOWN":
+        this.y += this.speed;
+        break;
     }
   }
 }
@@ -78,26 +98,53 @@ class Player extends Box {
   healthDecayRate = 3;
 
   constructor(x, y, selectedKey, playerNumber) {
-    super(x, y, Player.speed, playerCharacterImg);
+    super(x, y, Player.speed, playerCharacterUp);
     this.bulletSpped = 20;
     this.playerKey = playerKeys[selectedKey];
     this.playerNumber = playerNumber;
     this.receivedHealthGift = 0;
+    this.direction = "UP";
+  }
+
+  directional() {
+    const { LEFT, RIGHT, UP, DOWN } = this.playerKey;
+
+    if (keyIsDown(LEFT)) {
+      if (this.direction !== "LEFT") {
+        this.direction = "LEFT";
+        this.characterImg = playerCharacterLeft;
+      } else {
+        if (!this.checkBoundaryX().reachedLeft) this.x += this.speed * -1;
+      }
+    } else if (keyIsDown(RIGHT)) {
+      if (this.direction !== "RIGHT") {
+        this.characterImg = playerCharacterRight;
+        this.direction = "RIGHT";
+      } else {
+        if (!this.checkBoundaryX().reachedRight) {
+          this.speed < 0 && this.speed * -1;
+          this.x += this.speed;
+        }
+      }
+    } else if (keyIsDown(UP)) {
+      if (this.direction !== "UP") {
+        this.direction = "UP";
+        this.characterImg = playerCharacterUp;
+      } else {
+        if (!this.checkBoundaryY().reachedTop) this.y -= this.speed;
+      }
+    } else if (keyIsDown(DOWN)) {
+      if (this.direction !== "DOWN") {
+        this.characterImg = playerCharacterDown;
+        this.direction = "DOWN";
+      } else {
+        if (!this.checkBoundaryY().reachedBottom) this.y += this.speed;
+      }
+    }
   }
 
   move() {
     const { LEFT, RIGHT, UP, DOWN } = this.playerKey;
-
-    // if (
-    //   keyIsDown(LEFT) ||
-    //   keyIsDown(RIGHT) ||
-    //   keyIsDown(UP) ||
-    //   keyIsDown(DOWN)
-    // ) {
-    //   playerMoveAudio.play();
-    // } else {
-    //   playerMoveAudio.stop();
-    // }
 
     if (keyIsDown(LEFT)) {
       if (!this.checkBoundaryX().reachedLeft) this.x += this.speed * -1;
@@ -114,7 +161,14 @@ class Player extends Box {
   }
 
   shoot() {
-    this.shooting(this.x, this.y, this.bulletSpped, null, this.playerKey.SHOOT);
+    this.shooting(
+      this.x,
+      this.y,
+      this.bulletSpped,
+      null,
+      this.playerKey.SHOOT,
+      this.direction,
+    );
   }
 
   checkIncomingBullet() {
@@ -163,14 +217,14 @@ class Enemy extends Box {
   playerType = "Enemy";
 
   x = random(width);
-  y = random(height * 0.2, height * 0.4);
+  y = random(height * 0.2, height * 0.4); // keeps the height at 20% - 40%
 
   constructor(_id) {
-    super(Enemy.x, Enemy.y, Enemy.speed, enemyCharacterImg);
+    super(Enemy.x, Enemy.y, Enemy.speed, enemyCharacterDown);
     this._id = _id;
     this.bulletSpeed = 20;
     this.moveByStepFlag = true;
-    this.moveStepDelay = 500; // milliseconds
+    this.moveStepDelay = 2000; // milliseconds
     this.stepCounter = 0;
   }
 
@@ -180,15 +234,19 @@ class Enemy extends Box {
 
     switch (type) {
       case "LEFT":
+        this.characterImg = enemyCharacterLeft;
         if (!reachedLeft) this.x -= this.speed;
         break;
       case "RIGHT":
+        this.characterImg = enemyCharacterRight;
         if (!reachedRight) this.x += this.speed;
         break;
       case "UP":
+        this.characterImg = enemyCharacterUp;
         if (!reachedTop) this.y -= this.speed;
         break;
-      case "BOTTOM":
+      case "DOWN":
+        this.characterImg = enemyCharacterDown;
         if (!reachedBottom) this.y += this.speed;
     }
 
@@ -198,18 +256,25 @@ class Enemy extends Box {
   }
 
   move() {
-    const directions = ["LEFT", "RIGHT", "UP", "BOTTOM"];
+    const directions = ["LEFT", "RIGHT", "UP", "DOWN"];
     const direction = random(directions);
 
     if (this.moveByStepFlag) {
       this.moveByStepFlag = false;
-      this.shoot();
+      this.shoot(direction);
       this.direction(direction);
     }
   }
 
-  shoot() {
-    this.shooting(this.x, this.y, this.bulletSpeed, this.playerType);
+  shoot(direction) {
+    this.shooting(
+      this.x,
+      this.y,
+      this.bulletSpeed,
+      this.playerType,
+      null,
+      direction,
+    );
   }
 
   checkIncomingBullet() {
@@ -220,11 +285,11 @@ class Enemy extends Box {
         canvasBackgroundColor = [43, 137, 103];
         if (this.health <= 0) {
           killEnemyAudio.play();
-          playerBullets.splice(idx, 1);
           this.remove();
         } else {
           killEnemyAudio.stop();
         }
+        playerBullets.splice(idx, 1);
       }
     });
   }
@@ -260,7 +325,7 @@ class HealthGift extends GiftItems {
   value = random([20, 50, 70, 100]);
   speed = 3;
   constructor() {
-    super("health", HealthGift.value, HealthGift.spped, healthGiftImg);
+    super("health", HealthGift.value, HealthGift.speed, healthGiftImg);
   }
   t;
 }

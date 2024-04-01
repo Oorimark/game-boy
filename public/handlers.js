@@ -2,19 +2,12 @@ function playerActionHandler() {
   if (showPlayers[0]) {
     player1.display();
     player1.shoot();
-    player1.move();
+    player1.directional();
     player1.checkIncomingBullet();
     player1.checkIncomingGifts();
   } else {
     playerLoseAudio.play();
   }
-
-  // if (showPlayers[1]) {
-  //   player2.display();
-  //   player2.move();
-  //   player2.shoot();
-  //   player2.checkIncomingBullet();
-  // }
 }
 
 function enemyActionHandler() {
