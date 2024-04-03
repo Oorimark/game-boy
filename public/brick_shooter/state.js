@@ -13,14 +13,14 @@ class Box {
   }
 
   checkBoundaryX() {
-    let reachedRight = !(width - this.x - this.size > 0);
-    let reachedLeft = !(width - this.x - this.size <= width - this.size);
+    let reachedRight = !(width - this.x - this.size / 2 >= 0);
+    let reachedLeft = !(width - this.x - this.size / 2 <= width - this.size);
     return { reachedRight, reachedLeft };
   }
 
   checkBoundaryY() {
-    let reachedBottom = !(height - this.y - this.size > 0);
-    let reachedTop = !(height - this.y - this.size <= height - this.size);
+    let reachedBottom = !(height - this.y - this.size / 2 >= 0);
+    let reachedTop = !(height - this.y - this.size / 2 <= height - this.size);
 
     return { reachedBottom, reachedTop };
   }
@@ -40,7 +40,7 @@ class Box {
       if (keyIsDown(shootKeyType)) {
         bulletShootAudio.play();
         playerBullets.push(
-          new Bullet(x + this.size / 2, y - this.size, speed, playerDirection),
+          new Bullet(x + this.size / 2, y + this.size, speed, playerDirection),
         );
       } else {
         bulletShootAudio.stop();
@@ -95,7 +95,7 @@ class Bullet {
 class Player extends Box {
   speed = 20;
   health = 100;
-  healthDecayRate = 3;
+  healthDecayRate = 10;
 
   constructor(x, y, selectedKey, playerNumber) {
     super(x, y, Player.speed, playerCharacterUp);
@@ -163,7 +163,7 @@ class Player extends Box {
   shoot() {
     this.shooting(
       this.x,
-      this.y,
+      this.y - this.size / 2,
       this.bulletSpped,
       null,
       this.playerKey.SHOOT,
@@ -280,7 +280,8 @@ class Enemy extends Box {
   checkIncomingBullet() {
     playerBullets.forEach((bullet, idx) => {
       let d = dist(bullet.x, bullet.y, this.x, this.y);
-      if (d <= this.size / 2) {
+      if (d <= this.size) {
+        console.log("Hit Enemy!");
         this.health -= this.healthDecayRate;
         canvasBackgroundColor = [43, 137, 103];
         if (this.health <= 0) {
