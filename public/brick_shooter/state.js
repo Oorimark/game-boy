@@ -12,19 +12,6 @@ class Box {
     image(this.characterImg, this.x, this.y);
   }
 
-  checkBoundaryX() {
-    let reachedLeft = width - this.x - this.size / 2 <= 0;
-    let reachedRight = width - this.x - this.size / 2 >= width - this.size;
-    return { reachedRight, reachedLeft };
-  }
-
-  checkBoundaryY() {
-    let reachedBottom = !(height - this.y - this.size / 2 >= 0);
-    let reachedTop = !(height - this.y - this.size / 2 <= height - this.size);
-
-    return { reachedBottom, reachedTop };
-  }
-
   shooting(x, y, speed, playerType, shootKeyType, playerDirection) {
     if (playerType === "Enemy") {
       enemyBullets.push(
