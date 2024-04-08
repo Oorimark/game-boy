@@ -1,5 +1,6 @@
 class Snake {
   constructor() {
+    this.padding = 9;
     this.speed = scl;
 
     this.x = width / 2;
@@ -10,12 +11,16 @@ class Snake {
 
     this.total = 0;
     this.snakeBody = [];
+
+    this.score = 0;
+    this.scorePts = 1;
+    this.bigFoodScorePts = 5;
   }
 
   display() {
     fill(255);
 
-    for (let i = 0; i < this.snakeBody.length; i++) {
+    for (let i = this.snakeBody.length - 1; i >= 0; i--) {
       rect(this.snakeBody[i].x, this.snakeBody[i].y, this.size);
     }
 
@@ -64,8 +69,24 @@ class Snake {
       this.y += this.speed;
     }
 
-    this.x = constrain(this.x, 0, width);
-    this.y = constrain(this.y, 0, height);
+    if (this.total >= 1) {
+      this.x = constrain(this.x, 0, width);
+      this.y = constrain(this.y, 0, height - this.size);
+    }
+  }
+
+  checkBoundaryX(x) {
+    let reachedLeft = width - x - this.size / 2 < 0 - this.padding;
+    let reachedRight =
+      width - x - this.size / 2 >= width - this.size + this.padding;
+    return { reachedRight, reachedLeft };
+  }
+
+  checkBoundaryY(y) {
+    let reachedTop = height - y - this.size / 2 < 0 - this.padding;
+    let reachedBottom =
+      height - y - this.size / 2 >= height - this.size + this.padding;
+    return { reachedBottom, reachedTop };
   }
 
   eatFood() {
@@ -74,6 +95,52 @@ class Snake {
     if (d <= this.size) {
       food = new Food();
       this.total++;
+      this.score += this.scorePts;
+
+      if (!(this.score % 6)) {
+        bigFood = new BigFood();
+        showBigFood = true;
+      }
+
+      if (this.score > 20) {
+        frameRateValue++;
+      }
+    }
+  }
+
+  eatBigFood() {
+    const { x: foodX, y: foodY } = bigFood;
+    const d = dist(this.x, this.y, foodX, foodY);
+    if (d <= this.size) {
+      this.total++;
+      this.score += this.bigFoodScorePts;
+      showBigFood = false;
+    }
+  }
+
+  checkDeath() {
+    // Death would occur if the snake touches the boundary and if it's touches itelself
+    //
+
+    // Snake touching the boundary
+    for (let i = 2; i < this.snakeBody.length - 1; i++) {
+      const { reachedRight, reachedLeft } = this.checkBoundaryX(
+        this.snakeBody[i].x,
+      );
+      const { reachedBottom, reachedTop } = this.checkBoundaryY(
+        this.snakeBody[i].y,
+      );
+
+      if (reachedRight || reachedLeft || reachedBottom || reachedTop) noLoop();
+    }
+
+    // Snake touching itself
+    for (let i = 0; i < this.snakeBody.length - 1; i++) {
+      const d = dist(this.x, this.y, this.snakeBody[i].x, this.snakeBody[i].y);
+      if (d <= 1) {
+        noLoop();
+        console.log("You've eaten yourself");
+      }
     }
   }
 }
