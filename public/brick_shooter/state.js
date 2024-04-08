@@ -13,8 +13,8 @@ class Box {
   }
 
   checkBoundaryX() {
-    let reachedRight = !(width - this.x - this.size / 2 >= 0);
-    let reachedLeft = !(width - this.x - this.size / 2 <= width - this.size);
+    let reachedLeft = width - this.x - this.size / 2 <= 0;
+    let reachedRight = width - this.x - this.size / 2 >= width - this.size;
     return { reachedRight, reachedLeft };
   }
 
@@ -106,6 +106,11 @@ class Player extends Box {
     this.direction = "UP";
   }
 
+  _boundaryConstrainer() {
+    this.x = constrain(this.x, 0, width - this.size);
+    this.y = constrain(this.y, 0, height - this.size);
+  }
+
   directional() {
     const { LEFT, RIGHT, UP, DOWN } = this.playerKey;
 
@@ -114,50 +119,33 @@ class Player extends Box {
         this.direction = "LEFT";
         this.characterImg = playerCharacterLeft;
       } else {
-        if (!this.checkBoundaryX().reachedLeft) this.x += this.speed * -1;
+        this.x += this.speed * -1;
       }
     } else if (keyIsDown(RIGHT)) {
       if (this.direction !== "RIGHT") {
-        this.characterImg = playerCharacterRight;
         this.direction = "RIGHT";
+        this.characterImg = playerCharacterRight;
       } else {
-        if (!this.checkBoundaryX().reachedRight) {
-          this.speed < 0 && this.speed * -1;
-          this.x += this.speed;
-        }
+        this.speed < 0 && this.speed * -1;
+        this.x += this.speed;
       }
     } else if (keyIsDown(UP)) {
       if (this.direction !== "UP") {
         this.direction = "UP";
         this.characterImg = playerCharacterUp;
       } else {
-        if (!this.checkBoundaryY().reachedTop) this.y -= this.speed;
+        this.y -= this.speed;
       }
     } else if (keyIsDown(DOWN)) {
       if (this.direction !== "DOWN") {
         this.characterImg = playerCharacterDown;
         this.direction = "DOWN";
       } else {
-        if (!this.checkBoundaryY().reachedBottom) this.y += this.speed;
+        this.y += this.speed;
       }
     }
-  }
 
-  move() {
-    const { LEFT, RIGHT, UP, DOWN } = this.playerKey;
-
-    if (keyIsDown(LEFT)) {
-      if (!this.checkBoundaryX().reachedLeft) this.x += this.speed * -1;
-    } else if (keyIsDown(RIGHT)) {
-      if (!this.checkBoundaryX().reachedRight) {
-        if (this.speed < 0) this.speed * -1;
-        this.x += this.speed;
-      }
-    } else if (keyIsDown(UP)) {
-      if (!this.checkBoundaryY().reachedTop) this.y -= this.speed;
-    } else if (keyIsDown(DOWN)) {
-      if (!this.checkBoundaryY().reachedBottom) this.y += this.speed;
-    }
+    this._boundaryConstrainer();
   }
 
   shoot() {
@@ -226,29 +214,30 @@ class Enemy extends Box {
     this.moveByStepFlag = true;
     this.moveStepDelay = 2000; // milliseconds
     this.stepCounter = 0;
+    this.directions = ["LEFT", "RIGHT", "UP", "DOWN"];
   }
 
   direction(type) {
-    const { reachedLeft, reachedRight } = this.checkBoundaryX();
-    const { reachedTop, reachedBottom } = this.checkBoundaryY();
-
     switch (type) {
       case "LEFT":
         this.characterImg = enemyCharacterLeft;
-        if (!reachedLeft) this.x -= this.speed;
+        this.x -= this.speed;
         break;
       case "RIGHT":
         this.characterImg = enemyCharacterRight;
-        if (!reachedRight) this.x += this.speed;
+        this.x += this.speed;
         break;
       case "UP":
         this.characterImg = enemyCharacterUp;
-        if (!reachedTop) this.y -= this.speed;
+        this.y -= this.speed;
         break;
       case "DOWN":
         this.characterImg = enemyCharacterDown;
-        if (!reachedBottom) this.y += this.speed;
+        this.y += this.speed;
     }
+
+    this.x = constrain(this.x, 0, width - this.size);
+    this.y = constrain(this.y, 0, height - this.size);
 
     setTimeout(() => {
       this.moveByStepFlag = true;
@@ -256,8 +245,7 @@ class Enemy extends Box {
   }
 
   move() {
-    const directions = ["LEFT", "RIGHT", "UP", "DOWN"];
-    const direction = random(directions);
+    const direction = random(this.directions);
 
     if (this.moveByStepFlag) {
       this.moveByStepFlag = false;
@@ -281,7 +269,6 @@ class Enemy extends Box {
     playerBullets.forEach((bullet, idx) => {
       let d = dist(bullet.x, bullet.y, this.x, this.y);
       if (d <= this.size) {
-        console.log("Hit Enemy!");
         this.health -= this.healthDecayRate;
         canvasBackgroundColor = [43, 137, 103];
         if (this.health <= 0) {
