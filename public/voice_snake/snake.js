@@ -119,9 +119,6 @@ class Snake {
   }
 
   checkDeath() {
-    // Death would occur if the snake touches the boundary and if it's touches itelself
-    //
-
     // Snake touching the boundary
     for (let i = 2; i < this.snakeBody.length - 1; i++) {
       const { reachedRight, reachedLeft } = this.checkBoundaryX(
@@ -131,16 +128,22 @@ class Snake {
         this.snakeBody[i].y,
       );
 
-      if (reachedRight || reachedLeft || reachedBottom || reachedTop) noLoop();
+      if (reachedRight || reachedLeft || reachedBottom || reachedTop)
+        this.__handleDeath();
     }
 
     // Snake touching itself
     for (let i = 0; i < this.snakeBody.length - 1; i++) {
       const d = dist(this.x, this.y, this.snakeBody[i].x, this.snakeBody[i].y);
-      if (d <= 1) {
-        noLoop();
-        console.log("You've eaten yourself");
-      }
+      if (d <= 1) this.__handleDeath();
     }
+  }
+
+  __handleDeath() {
+    noLoop();
+    showGameOver = true;
+    console.log("You've eaten yourself");
+    parseInt(highestScore) < this.score &&
+      localStorage.setItem("highestScore", this.score);
   }
 }

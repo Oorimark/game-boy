@@ -1,6 +1,7 @@
 class Food {
   constructor() {
     this.size = scl;
+
     const v = this.createFood();
     this.x = v.x;
     this.y = v.y;

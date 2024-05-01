@@ -14,22 +14,58 @@
       padding: 0;
       overflow-x: hidden;
       overflow-y: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100vh;
+    }
+    .min-window-width-error {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      margin-inline: 2rem;
+      height: 100vh;
+    }
+    .dialog-container {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #f2f2f2;
+      backdrop-filter: blur(1rem);
+      width: 10rem;
+      z-index: 99;
+      height: 10rem;
     }
   </style>
   <body>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/script.js"></script>
-
-    <script src="./brick_shooter/variables.js"></script>
-    <script src="./brick_shooter/state.js"></script>
-    <script src="./brick_shooter/handlers.js"></script>
-    <script src="./brick_shooter/sketch.js"></script>
-
-    <!-- <script src="./voice_snake/variables.js"></script> -->
-    <!-- <script src="./voice_snake/obstacles.js"></script> -->
-    <!-- <script src="./voice_snake/handlers.js"></script> -->
-    <!-- <script src="./voice_snake/food.js"></script> -->
-    <!-- <script src="./voice_snake/snake.js"></script> -->
-    <!-- <script src="./voice_snake/sketch.js"></script> -->
+    <div class="min-window-width-error" id="minWindowWidthError">
+      Sorry the game can't be played on mobile, switch to a desktop screen
+    </div>
   </body>
+  <script>
+    let minWidthError = false;
+    const MIN_WINDOW_WIDTH = 700;
+
+    if (window.innerWidth <= MIN_WINDOW_WIDTH) {
+      minWidthError = true;
+      document.querySelector("#minWindowWidthError").style.display = "flex";
+      setTimeout(() => {
+        const canvas = document.querySelector("#defaultCanvas0");
+        canvas.style.display = "none";
+      }, 2500);
+    }
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/script.js"></script>
+
+  <script src="./voice_snake/variables.js"></script>
+  <script src="./voice_snake/obstacles.js"></script>
+  <script src="./voice_snake/handlers.js"></script>
+  <script src="./voice_snake/ui.js"></script>
+  <script src="./voice_snake/food.js"></script>
+  <script src="./voice_snake/snake.js"></script>
+  <script src="./voice_snake/sketch.js"></script>
 </html>

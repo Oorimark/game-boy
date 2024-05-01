@@ -3,8 +3,7 @@ const soundModelURL =
 
 function preload() {
   const options = { probabilityThreshold: 0.95 };
-  // classifier = ml5.soundClassifier("SpeechCommands18w", options, modelReady);
-  // classifier = ml5.soundClassifier(soundModelURL, options, modelReady);
+  classifier = ml5.soundClassifier("SpeechCommands18w", options, modelReady);
 }
 
 function setup() {
@@ -16,13 +15,11 @@ function setup() {
 }
 
 function draw() {
-  frameRate(frameRateValue);
+  frameRate(frameRateValue); // starts increasing by 1 when the score hits 20
   background(12);
 
   food.display();
-
   displayScore();
-
   displayObstacles();
 
   snake.move();
@@ -39,7 +36,7 @@ function draw() {
   }
 
   if (showGameOver) {
-    displayGameOver();
+    displayRestartGameScreen();
   }
 }
 
