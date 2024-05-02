@@ -7,8 +7,19 @@ function createBigFoodHanlder() {
   showBigFood = true;
 }
 
-function createObstacles(playerScore) {
-  const number = playerScore === 0 ? 1 : (playerScore % 3) * 2;
+function showBigFoodHandler() {
+  if (showBigFood) {
+    bigFood.display();
+    snake.eatBigFood();
+    setTimeout(() => {
+      showBigFood = false;
+    }, bigFoodTimeout);
+  }
+}
+
+function createObstacles() {
+  // const number = playerScore === 0 ? 1 : (playerScore % 3) * 2;
+  const number = random(2, 5);
 
   obstacles = [];
   for (let i = 0; i <= number; i++) {

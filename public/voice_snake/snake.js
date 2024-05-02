@@ -97,14 +97,8 @@ class Snake {
       this.total++;
       this.score += this.scorePts;
 
-      if (!(this.score % 6)) {
-        bigFood = new BigFood();
-        showBigFood = true;
-      }
-
-      if (this.score > 20) {
-        frameRateValue++;
-      }
+      if (!(this.score % 6)) createBigFoodHanlder();
+      if (this.score > 20) frameRateValue++;
     }
   }
 

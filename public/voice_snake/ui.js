@@ -16,11 +16,12 @@ function displayRestartGameScreen() {
       ? `New High Score: ${currentScore}`
       : `Your Score: ${currentScore}`;
   const statusText = createP(scoreStatus);
-  const continueBtn = createButton("Continue");
+  const continueBtn = createButton("Restart");
   continueBtn.mousePressed(function () {
     dialogContainer.remove();
     snake.total = 0;
-    Loop();
+    window.location.reload();
+    console.log(window.location);
   });
 
   dialogBox([text, overText, statusText, continueBtn]);
