@@ -15,7 +15,7 @@ function setup() {
 }
 
 function draw() {
-  frameRate(frameRateValue); // starts increasing by 1 when the score hits 20
+  frameRate(frameRateValue); // frame rate = 10 but starts increasing by 1 when the score hits 20
   background(12);
 
   food.display();
@@ -27,7 +27,9 @@ function draw() {
   snake.move();
   snake.eatFood();
   snake.display();
-  snake.checkDeath();
+  snake.checkEatSelf();
+  snake.checkObstacle();
+  snake.checkBoundary();
 
   if (showGameOver) {
     displayRestartGameScreen();

@@ -21,9 +21,7 @@ function displayRestartGameScreen() {
     dialogContainer.remove();
     snake.total = 0;
     window.location.reload();
-    console.log(window.location);
   });
-
   dialogBox([text, overText, statusText, continueBtn]);
 }
 

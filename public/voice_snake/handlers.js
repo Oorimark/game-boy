@@ -18,10 +18,7 @@ function showBigFoodHandler() {
 }
 
 function createObstacles() {
-  // const number = playerScore === 0 ? 1 : (playerScore % 3) * 2;
-  const number = random(2, 5);
-
-  obstacles = [];
+  const number = random(2, 4);
   for (let i = 0; i <= number; i++) {
     obstacles.push(new Obstacle());
   }

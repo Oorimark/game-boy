@@ -1,12 +1,12 @@
 class Obstacle {
   constructor() {
-    this.x = random(20, width);
-    this.y = random(20, height);
     this.size = 42;
+    this.x = random(20, width - this.size);
+    this.y = random(20, height - this.size);
   }
 
   display() {
-    fill(0, 255, 0);
+    fill(255, 0, 0);
     rect(this.x, this.y, this.size);
   }
 }
