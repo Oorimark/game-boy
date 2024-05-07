@@ -3,8 +3,8 @@ class Food {
     this.size = scl;
 
     const v = this.createFood();
-    this.x = v.x;
-    this.y = v.y;
+    this.x = constrain(v.x, 0, width - this.size);
+    this.y = constrain(v.y, 0, height - this.size);
   }
 
   createFood() {

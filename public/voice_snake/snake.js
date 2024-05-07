@@ -23,8 +23,6 @@ class Snake {
     for (let i = this.snakeBody.length - 1; i >= 0; i--) {
       rect(this.snakeBody[i].x, this.snakeBody[i].y, this.size);
     }
-
-    // rect(this.x, this.y, this.size);
   }
 
   direct(direction) {
@@ -67,11 +65,6 @@ class Snake {
     } else if (this.direction === "ArrowDown") {
       this.y += this.speed;
     }
-
-    // if (this.total >= 1) {
-    //   this.x = constrain(this.x, 0, width);
-    //   this.y = constrain(this.y, 0, height - this.size);
-    // }
   }
 
   checkBoundaryX(x) {
@@ -112,24 +105,8 @@ class Snake {
   }
 
   checkBoundary() {
-    // for (let i = 0; i < this.snakeBody.length - 1; i++) {
-    //   const { reachedRight, reachedLeft } = this.checkBoundaryX(
-    //     this.snakeBody[i].x,
-    //   );
-    //   const { reachedBottom, reachedTop } = this.checkBoundaryY(
-    //     this.snakeBody[i].y,
-    //   );
-    //
-    //   if (reachedRight || reachedLeft || reachedBottom || reachedTop)
-    //     this.handleDeath();
-    // }
-
-    const { reachedRight, reachedLeft } = this.checkBoundaryX(
-      this.snakeBody[this.total - 1].x,
-    );
-    const { reachedTop, reachedBottom } = this.checkBoundaryY(
-      this.snakeBody[this.total - 1].y,
-    );
+    const { reachedRight, reachedLeft } = this.checkBoundaryX(this.x);
+    const { reachedTop, reachedBottom } = this.checkBoundaryY(this.y);
 
     if (reachedRight || reachedLeft || reachedBottom || reachedTop) {
       this.handleDeath();
