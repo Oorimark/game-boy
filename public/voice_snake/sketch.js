@@ -19,7 +19,6 @@ function draw() {
   background(12);
 
   food.display();
-  displayScore();
   displayObstacles();
 
   showBigFoodHandler();
